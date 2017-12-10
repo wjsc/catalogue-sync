@@ -1,0 +1,25 @@
+{
+  "name": "catalogue-sync",
+  "version": "1.0.0",
+  "description": "Adds static files to database",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wjsc/catalogue-sync.git"
+  },
+  "author": "wjsc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wjsc/catalogue-sync/issues"
+  },
+  "homepage": "https://github.com/wjsc/catalogue-sync#readme",
+  "dependencies": {
+    "config": "^1.28.1",
+    "musicmetadata": "^2.0.5",
+    "node-fetch": "^1.7.3"
+  }
+}

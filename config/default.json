@@ -1,0 +1,7 @@
+{
+    "audio_dir":"../catalogue-static/data/",
+	"api":{
+		"host":"http://localhost:3001/",
+		"apiKey":false
+	}
+}
