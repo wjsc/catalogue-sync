@@ -63,7 +63,7 @@ const getCover = dir => {
 
 const getTag = file => {
     return new Promise((resolve, reject) => 
-        mm(fs.createReadStream(file), (err, metadata) => {
+        mm(fs.createReadStream(file), { duration: true }, (err, metadata) => {
             if (err) reject(err);
             resolve(metadata);
         })
@@ -76,7 +76,7 @@ const buildTrack = (tag, audio, trackId, albumId, artistId) => {
         album: albumId, 
         _id: trackId,
         title: tag.title,
-        duration: tag.duration || 1,
+        duration: tag.duration,
         audio: audio.slice(config.get("audio_dir").length)
     }
 }
@@ -118,4 +118,4 @@ const postToApi = (endpoint, object) => {
     }).then(res => res.json()).then(obj => console.log(obj) || obj);
 }
 
-processArtistDir('Radiohead');
+processArtistDir(process.argv[2]);
