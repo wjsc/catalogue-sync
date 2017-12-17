@@ -76,6 +76,7 @@ const buildTrack = (tag, audio, trackId, albumId, artistId) => {
         album: albumId, 
         _id: trackId,
         title: tag.title,
+        no: tag.track.no,
         duration: tag.duration,
         audio: audio.slice(config.get("audio_dir").length)
     }
