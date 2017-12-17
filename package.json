@@ -20,6 +20,7 @@
   "dependencies": {
     "config": "^1.28.1",
     "musicmetadata": "^2.0.5",
-    "node-fetch": "^1.7.3"
+    "node-fetch": "^1.7.3",
+    "uuid": "^3.1.0"
   }
 }
