@@ -6,12 +6,14 @@ const mm = require('musicmetadata');
 const uuid = require('uuid/v4');
 
 const processArtistDir = async dir => {
+    console.log(config.get("audio_dir") + dir);
     const dirs = await getDirs(config.get("audio_dir") + dir)
     const ids = [];
     let firstTag = false;
     const artistId = uuid(dir);
+    const artistName = dir;
     for(dir of dirs){
-        const obj = await processAlbumDir(dir, artistId);
+        const obj = await processAlbumDir(dir, artistId, artistName);
         ids.push(obj.id);
         if(!firstTag) firstTag = obj.firstTag;
     }
@@ -28,20 +30,21 @@ const getDirs = (dir) => {
     ))
 }
 
-const processAlbumDir = async (dir, artistId) => {
+const processAlbumDir = async (dir, artistId, artistName) => {
     const audios = await getAudios(dir);
     const firstTag = await getTag(audios[0]);
     const cover = getCover(dir);
     const ids = [];
     const albumId = uuid(firstTag.album);
+    const albumTitle = firstTag.album;
     for(audio of audios){
         const tag = await getTag(audio);
         const trackId = uuid(tag.title);
-        const track = buildTrack(tag, audio, trackId, albumId, artistId);
+        const track = buildTrack(tag, audio, trackId, albumId, albumTitle, artistId, artistName);
         const res = await postTrack(track);
         ids.push(res.id);
     }
-    const album = buildAlbum(firstTag, cover, ids, artistId, albumId);
+    const album = buildAlbum(firstTag, cover, ids, artistId, artistName, albumId);
     const res = await postAlbum(album);
     return {firstTag: firstTag, id: res.id};
 }
@@ -70,10 +73,16 @@ const getTag = file => {
     )
 }
 
-const buildTrack = (tag, audio, trackId, albumId, artistId) => {
+const buildTrack = (tag, audio, trackId, albumId, albumTitle, artistId, artistName) => {
     return {
-        artist: artistId,
-        album: albumId, 
+        artist: { 
+            _id: artistId,
+            name: artistName
+        },
+        album: {
+            _id: albumId, 
+            title: albumTitle
+        },
         _id: trackId,
         title: tag.title,
         no: tag.track.no,
@@ -90,10 +99,13 @@ const buildArtist = (firstTag, ids, artistId) => {
     }
 }
 
-const buildAlbum = (firstTag, cover, ids, artistId, albumId) => {
+const buildAlbum = (firstTag, cover, ids, artistId, artistName, albumId) => {
     return {
         _id: albumId,
-        artist: artistId, 
+        artist: { 
+            _id: artistId,
+            name: artistName
+        },
         title: firstTag.album,
         year: firstTag.year,
         tracks: ids,

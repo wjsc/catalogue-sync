@@ -1,5 +1,5 @@
 {
-    "audio_dir":"../catalogue-static/data/",
+    "audio_dir":"/home/wal/.catalogue/files/",
 	"api":{
 		"host":"http://localhost:3001/",
 		"apiKey":false
