@@ -1,0 +1,7 @@
+{
+    "audio_dir": "AUDIO_DIR",
+	"api":{
+		"host":"HOST",
+		"apiKey":"API_KEY"
+	}
+}
