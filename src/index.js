@@ -5,13 +5,20 @@ const path = require("path");
 const mm = require('musicmetadata');
 const uuid = require('uuid/v4');
 
+const processDir = async dir => {
+    let dirs = await getDirs(dir);
+    for(dir of dirs){
+        await processArtistDir(dir);
+    }
+}
+
 const processArtistDir = async dir => {
-    console.log(config.get("audio_dir") + dir);
-    const dirs = await getDirs(config.get("audio_dir") + dir)
+    console.log(dir);
+    const dirs = await getDirs(dir)
     const ids = [];
     let firstTag = false;
     const artistId = uuid(dir);
-    const artistName = dir;
+    const artistName = relativeToConfigDir(dir);
     for(dir of dirs){
         const obj = await processAlbumDir(dir, artistId, artistName);
         ids.push(obj.id);
@@ -87,7 +94,7 @@ const buildTrack = (tag, audio, trackId, albumId, albumTitle, artistId, artistNa
         title: tag.title,
         no: tag.track.no,
         duration: tag.duration,
-        audio: audio.slice(config.get("audio_dir").length)
+        audio: relativeToConfigDir(audio)
     }
 }
 
@@ -109,7 +116,7 @@ const buildAlbum = (firstTag, cover, ids, artistId, artistName, albumId) => {
         title: firstTag.album,
         year: firstTag.year,
         tracks: ids,
-        cover: cover.slice(config.get("audio_dir").length)
+        cover: relativeToConfigDir(cover)
 
     }
 }
@@ -131,4 +138,8 @@ const postToApi = (endpoint, object) => {
     }).then(res => res.json()).then(obj => console.log(obj) || obj);
 }
 
-processArtistDir(process.argv[2]);
+const relativeToConfigDir = (file) => {
+    return path.relative(config.get("audio_dir"), file);
+}
+
+processDir(config.get('audio_dir'));
