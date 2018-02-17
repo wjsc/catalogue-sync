@@ -141,5 +141,6 @@ const postToApi = (endpoint, object) => {
 const relativeToConfigDir = (file) => {
     return path.relative(config.get("audio_dir"), file);
 }
-
-processDir(config.get('audio_dir'));
+process.argv[2] ?
+processDir(config.get('audio_dir'))
+: processArtistDir(config.get('audio_dir')+process.argv[2]);
